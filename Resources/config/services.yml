@@ -1,0 +1,16 @@
+parameters:
+    bdxmlrpc.request_listener.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
+    bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
+
+services:
+    bdxmlrpc.request_listener:
+        class: %bdxmlrpc.request_listener.class%
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+        arguments:
+            - @bdxmlrpc.request_parser
+            - @http_kernel
+            - @router
+
+    bdxmlrpc.request_parser:
+        class: %bdxmlrpc.request_parser.class%
