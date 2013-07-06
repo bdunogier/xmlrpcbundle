@@ -8,9 +8,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
         arguments:
-            - @bdxmlrpc.request_parser
             - @http_kernel
             - @router
+            - @bdxmlrpc.request_generator
 
     bdxmlrpc.request_parser:
         class: %bdxmlrpc.request_parser.class%
+
+    bdxmlrpc.request_generator:
+        class: %bdxmlrpc.request_generator%
+        arguments:
+            - @bdxmlrpc.request_parser

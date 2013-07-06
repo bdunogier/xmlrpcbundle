@@ -13,5 +13,8 @@ use PHPUnit_Framework_TestCase;
 
 class RequestEventListenerTest extends PHPUnit_Framework_TestCase
 {
+    public function testGetSubscribedEvents()
+    {
 
+    }
 }
