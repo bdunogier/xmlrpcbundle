@@ -15,8 +15,9 @@ use PHPUnit_Framework_TestCase;
 class RequestParserTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @covers RequestParser::loadXmlString()
-     * @returns The RequestParser with the loaded string
+     * @covers RequestParser::fromXmlString
+     * @covers RequestParser::__construct
+     * @returns RequestParser The RequestParser with the loaded string
      */
     public function testLoadXmLString()
     {
@@ -32,6 +33,7 @@ class RequestParserTest extends PHPUnit_Framework_TestCase
 </methodCall>
 XML;
 
+        return RequestParser::fromXmlString( $xmlString );
     }
 
     /**
@@ -39,27 +41,34 @@ XML;
      * @expectedException \UnexpectedValueException
      * @expectedExceptionMessage Invalid xmlString argument
      */
-    public function testLoadXmlStringInvalidXml()
+    public function testFromXmlStringInvalidXml()
     {
-        self::markTestSkipped( "Resolve simplexml_load_string warning first" );
-        $xmlString = "This is not XML";
-        $this->getRequestParser()->loadXmlString( $xmlString );
-    }
-
-    public function testLoadXmlStringInvalidStructure()
-    {
-
-    }
-
-    public function getMethodName()
-    {
+        RequestParser::fromXmlString( "This is not XML" );
     }
 
     /**
-     * @return RequestParser
+     * @covers RequestParser::loadXmlString()
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage Invalid XML-RPC structure (/methodCall/methodName not found)
      */
-    public function getRequestParser()
+    public function testLoadXmlStringInvalidStructure()
     {
-        return new RequestParser;
+        $xmlString = <<< XML
+<?xml version="1.0"?>
+<someNode>
+  <someOtherNode>bdxmlrpc.getStuff</someOtherNode>
+</someNode>
+XML;
+
+        RequestParser::fromXmlString( $xmlString );
+    }
+
+    /**
+     * @depends testLoadXmLString
+     * @param RequestParser $requestParser
+     */
+    public function getMethodName( RequestParser $requestParser)
+    {
+        self::assertEquals( 'getStuff', $requestParser->getMethodName() );
     }
 }
