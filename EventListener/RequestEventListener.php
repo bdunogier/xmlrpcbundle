@@ -9,7 +9,7 @@
 
 namespace BD\Bundle\XmlRpcBundle\EventListener;
 
-use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser;
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -23,11 +23,6 @@ use Symfony\Component\Routing\RouterInterface;
 class RequestEventListener implements EventSubscriberInterface
 {
     /**
-     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
-     */
-    private $requestParser;
-
-    /**
      * @var \Symfony\Component\HttpKernel\HttpKernel
      */
     private $httpKernel;
@@ -37,11 +32,16 @@ class RequestEventListener implements EventSubscriberInterface
      */
     private $router;
 
-    public function __construct( RequestParser $requestParser, HttpKernel $kernel, RouterInterface $router  )
+    /**
+     * @var RequestGenerator
+     */
+    private $requestGenerator;
+
+    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGenerator $requestGenerator )
     {
-        $this->requestParser = $requestParser;
         $this->httpKernel = $kernel;
         $this->router = $router;
+        $this->requestGenerator = $requestGenerator;
     }
 
     public static function getSubscribedEvents()
@@ -62,14 +62,10 @@ class RequestEventListener implements EventSubscriberInterface
             return false;
 
         if ( strpos( $event->getRequest()->getPathInfo(), '/xmlrpc2' ) != 0 || $event->getRequest()->getMethod() !== 'POST' )
-            return;
+            return false;
 
-        // We create a new request, based on the XML payload
-        $this->requestParser->loadXmlString( $event->getRequest()->getContent() );
+        $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
 
-        $request = $event->getRequest()->duplicate(
-            null, null, null, null, null, array( 'path' => '/xmlrpc/' . $this->requestParser->getMethodName() )
-        );
         $requestContext = new RequestContext();
         $requestContext->fromRequest( $request );
 
