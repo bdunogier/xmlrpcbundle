@@ -13,7 +13,7 @@ use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use PHPUnit_Framework_TestCase;
 
-class RequestParserTest extends PHPUnit_Framework_TestCase
+class RequestGeneratorTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers RequestGenerator::generateFromRequest()
