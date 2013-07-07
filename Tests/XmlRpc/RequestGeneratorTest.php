@@ -50,10 +50,7 @@ class RequestGeneratorTest extends PHPUnit_Framework_TestCase
     {
         if ( !isset( $this->requestParserMock ) )
         {
-            $this->requestParserMock = $this
-                ->getMockBuilder( 'BD\\Bundle\\XmlRpcBundle\\XmlRpc\\RequestParser' )
-                ->disableOriginalConstructor()
-                ->getMock();
+            $this->requestParserMock = $this->getMock( 'BD\\Bundle\\XmlRpcBundle\\XmlRpc\\RequestParser' );
         }
         return $this->requestParserMock;
     }

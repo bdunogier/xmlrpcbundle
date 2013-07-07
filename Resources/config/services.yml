@@ -1,6 +1,7 @@
 parameters:
     bdxmlrpc.request_listener.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
     bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
+    bdxmlrpc.request_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator
 
 services:
     bdxmlrpc.request_listener:
@@ -16,6 +17,6 @@ services:
         class: %bdxmlrpc.request_parser.class%
 
     bdxmlrpc.request_generator:
-        class: %bdxmlrpc.request_generator%
+        class: %bdxmlrpc.request_generator.class%
         arguments:
             - @bdxmlrpc.request_parser

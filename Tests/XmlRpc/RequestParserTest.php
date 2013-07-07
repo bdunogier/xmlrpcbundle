@@ -33,17 +33,18 @@ class RequestParserTest extends PHPUnit_Framework_TestCase
 </methodCall>
 XML;
 
-        return RequestParser::fromXmlString( $xmlString );
+        $this->getRequestParser()->fromXmlString( $xmlString );
+        return $this->getRequestParser();
     }
 
     /**
      * @covers RequestParser::loadXmlString()
      * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage Invalid xmlString argument
+     * @expectedExceptionMessage Invalid XML string:
      */
     public function testFromXmlStringInvalidXml()
     {
-        RequestParser::fromXmlString( "This is not XML" );
+        $this->getRequestParser()->fromXmlString( "This is not XML" );
     }
 
     /**
@@ -60,15 +61,32 @@ XML;
 </someNode>
 XML;
 
-        RequestParser::fromXmlString( $xmlString );
+        $this->getRequestParser()->fromXmlString( $xmlString );
     }
 
     /**
      * @depends testLoadXmLString
      * @param RequestParser $requestParser
      */
-    public function getMethodName( RequestParser $requestParser)
+    public function testGetMethodName( RequestParser $requestParser)
     {
-        self::assertEquals( 'getStuff', $requestParser->getMethodName() );
+        self::assertEquals( 'bdxmlrpc.getStuff', $requestParser->getMethodName() );
     }
+
+    /**
+     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
+     */
+    private function getRequestParser()
+    {
+        if ( !isset( $this->requestParser ) )
+        {
+            $this->requestParser = new RequestParser;
+        }
+        return $this->requestParser;
+    }
+
+    /**
+     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
+     */
+    private $requestParser;
 }

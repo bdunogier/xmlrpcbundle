@@ -18,24 +18,13 @@ class RequestParser
     /** @var \SimpleXMLElement */
     private $simpleXml;
 
-    public function __construct( SimpleXmlElement $simpleXml )
-    {
-        $this->simpleXml = $simpleXml;
-
-        if ( !isset( $this->simpleXml->methodName ) )
-            throw new \UnexpectedValueException( "Invalid XML-RPC structure (/methodCall/methodName not found)" );
-
-    }
-
     /**
      * Loads an XML string for parsing
      * @param $xmlString
      *
      * @throws \UnexpectedValueException If the XML payload could not be parsed
-     *
-     * @todo Refactor so that constructor takes a SimpleXmlElement, and add static method fromXmlString
      */
-    public static function fromXmlString( $xmlString )
+    public function fromXmlString( $xmlString )
     {
         libxml_use_internal_errors( true );
         if ( ( $simpleXml = simplexml_load_string( $xmlString ) ) === false )
@@ -43,10 +32,13 @@ class RequestParser
             $errors = array();
             foreach( libxml_get_errors() as $error )
                 $errors[] = $error->message;
-            throw new \UnexpectedValueException( "Invalid xmlString argument:" . implode( "\n", $errors ) );
+            throw new \UnexpectedValueException( "Invalid XML string:" . implode( "\n", $errors ) );
         }
 
-        return new self( $simpleXml );
+        $this->simpleXml = $simpleXml;
+
+        if ( !isset( $this->simpleXml->methodName ) )
+            throw new \UnexpectedValueException( "Invalid XML-RPC structure (/methodCall/methodName not found)" );
     }
 
     /**

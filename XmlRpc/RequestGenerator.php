@@ -34,8 +34,7 @@ class RequestGenerator
     public function generateFromRequest( Request $originalRequest )
     {
         // We create a new request, based on the XML payload
-        $requestParser = $this->requestParser;
-        $requestParser::fromXmlString( $originalRequest->getContent() );
+        $this->requestParser->fromXmlString( $originalRequest->getContent() );
 
         return Request::create(
             "/xmlrpc/" . $this->requestParser->getMethodName(),
