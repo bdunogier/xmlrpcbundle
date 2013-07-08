@@ -33,7 +33,6 @@ class RequestGenerator
      */
     public function generateFromRequest( Request $originalRequest )
     {
-        // We create a new request, based on the XML payload
         $this->requestParser->fromXmlString( $originalRequest->getContent() );
 
         return Request::create(

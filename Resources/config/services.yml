@@ -1,17 +1,21 @@
 parameters:
-    bdxmlrpc.request_listener.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
+    bdxmlrpc.event_listener.request.class: BD\Bundle\XmlRpcBundle\EventListener\EventListener
+    bdxmlrpc.event_listener.view.class: BD\Bundle\XmlRpcBundle\EventListener\View
     bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
     bdxmlrpc.request_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator
 
 services:
-    bdxmlrpc.request_listener:
-        class: %bdxmlrpc.request_listener.class%
+    bdxmlrpc.event_listener.request:
+        class: %bdxmlrpc.event_listener.request.class%
+        arguments: [ @http_kernel, @router, @bdxmlrpc.request_generator ]
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-        arguments:
-            - @http_kernel
-            - @router
-            - @bdxmlrpc.request_generator
+            - { name: kernel.event_subscriber }
+
+    bdxmlrpc.event_listener.view:
+        class: %bdxmlrpc.event_listener.class%
+        arguments: [ @bdxmlrpc.response_generator ]
+        tags:
+            - { name: kernel.event_subscriber }
 
     bdxmlrpc.request_parser:
         class: %bdxmlrpc.request_parser.class%
@@ -20,6 +24,9 @@ services:
         class: %bdxmlrpc.request_generator.class%
         arguments:
             - @bdxmlrpc.request_parser
+
+    bdxmlrpc.response_generator:
+        class: %bdxmlrpc.response_generator.class%
 
     bdxmlrpc.controller.test:
         class: BD\Bundle\XmlRpcBundle\Controller\Test
