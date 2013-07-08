@@ -52,7 +52,7 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->expects( $this->never() )
             ->method( 'generateFromRequest' );
 
-        self::assertFalse(
+        self::assertNull(
             $this->getRequestEventListener()->onKernelRequest( $event )
         );
     }
@@ -74,28 +74,19 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->expects( $this->never() )
             ->method( 'generateFromRequest' );
 
-        self::assertFalse(
+        self::assertNull(
             $this->getRequestEventListener()->onKernelRequest( $event )
         );
     }
 
-    /**
-     * @covers RequestEventListener::onKernelRequest()
-     */
-    public function testOnKernelRequestGetRequest()
+    public function getHttpVerbs()
     {
-        $event = new GetResponseEvent(
-            $this->getHttpKernelMock(),
-            Request::create( '/xmlrpc2', 'GET' ),
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
-        $this->getRequestGeneratorMock()
-            ->expects( $this->never() )
-            ->method( 'generateFromRequest' );
-
-        self::assertFalse(
-            $this->getRequestEventListener()->onKernelRequest( $event )
+        return array(
+            array( 'GET' ),
+            array( 'PUT' ),
+            array( 'DELETE' ),
+            array( 'OPTIONS' ),
+            array( 'ANYTHING' )
         );
     }
 
@@ -128,6 +119,27 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->expects( $this->once() )
             ->method( 'handle' )
             ->will( $this->returnValue( new Response() ) );
+
+        self::assertNull(
+            $this->getRequestEventListener()->onKernelRequest( $event )
+        );
+    }
+
+    /**
+     * @dataProvider getHttpVerbs()
+     * @covers RequestEventListener::onKernelRequest()
+     */
+    public function testOnKernelRequestNotPostRequest( $verb )
+    {
+        $event = new GetResponseEvent(
+            $this->getHttpKernelMock(),
+            Request::create( '/xmlrpc2', 'GET' ),
+            HttpKernelInterface::MASTER_REQUEST
+        );
+
+        $this->getRequestGeneratorMock()
+            ->expects( $this->never() )
+            ->method( 'generateFromRequest' );
 
         self::assertNull(
             $this->getRequestEventListener()->onKernelRequest( $event )
