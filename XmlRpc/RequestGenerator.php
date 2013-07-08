@@ -39,7 +39,7 @@ class RequestGenerator
         return Request::create(
             "/xmlrpc/" . $this->requestParser->getMethodName(),
             "POST",
-            array(),
+            $this->requestParser->getParameters(),
             $originalRequest->cookies->all(),
             array(),
             $originalRequest->server->all(),

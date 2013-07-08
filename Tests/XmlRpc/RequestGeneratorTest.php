@@ -21,6 +21,7 @@ class RequestGeneratorTest extends PHPUnit_Framework_TestCase
     public function testGenerateFromRequest()
     {
         $methodName = 'methodName';
+        $parameters = array( 'ping', 'pong' );
 
         $request = Request::create( '/xmlrpc2', 'POST' );
 
@@ -28,6 +29,11 @@ class RequestGeneratorTest extends PHPUnit_Framework_TestCase
             ->expects( $this->once() )
             ->method( 'getMethodName' )
             ->will( $this->returnValue( $methodName ) );
+
+        $this->getRequestParserMock()
+            ->expects( $this->once() )
+            ->method( 'getParameters' )
+            ->will( $this->returnValue( $parameters ) );
 
         $requestGenerator = new RequestGenerator( $this->getRequestParserMock() );
         $xmlRpcRequest = $requestGenerator->generateFromRequest( $request );
@@ -40,6 +46,11 @@ class RequestGeneratorTest extends PHPUnit_Framework_TestCase
         self::assertEquals(
             'POST',
             $xmlRpcRequest->getMethod()
+        );
+
+        self::assertEquals(
+            $parameters,
+            $xmlRpcRequest->request->all()
         );
     }
 
