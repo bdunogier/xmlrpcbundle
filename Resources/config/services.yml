@@ -20,3 +20,6 @@ services:
         class: %bdxmlrpc.request_generator.class%
         arguments:
             - @bdxmlrpc.request_parser
+
+    bdxmlrpc.controller.test:
+        class: BD\Bundle\XmlRpcBundle\Controller\Test

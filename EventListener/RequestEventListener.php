@@ -11,6 +11,7 @@ namespace BD\Bundle\XmlRpcBundle\EventListener;
 
 use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -59,12 +60,20 @@ class RequestEventListener implements EventSubscriberInterface
     public function onKernelRequest( GetResponseEvent $event )
     {
         if ( $event->getRequestType() != HttpKernelInterface::MASTER_REQUEST )
-            return false;
+            return;
 
-        if ( strpos( $event->getRequest()->getPathInfo(), '/xmlrpc2' ) != 0 || $event->getRequest()->getMethod() !== 'POST' )
-            return false;
+        if ( strpos( $event->getRequest()->getPathInfo(), '/xmlrpc2' ) !== 0 || $event->getRequest()->getMethod() !== 'POST' )
+            return;
 
-        $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
+        try
+        {
+            $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
+        }
+        catch ( \UnexpectedValueException $e )
+        {
+            $event->setResponse( new Response( "Invalid request XML\n" . $e->getMessage(), 400 ) );
+            return;
+        }
 
         $requestContext = new RequestContext();
         $requestContext->fromRequest( $request );
@@ -76,5 +85,8 @@ class RequestEventListener implements EventSubscriberInterface
 
         $event->setResponse( $response );
         $this->router->setContext( $originalContext );
+
+        if ( $response instanceof Response )
+            $event->setResponse( $response );
     }
 }

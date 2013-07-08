@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <methodCall>
-  <methodName>bdxmlrpc.getStuff</methodName>
+  <methodName>bdxmlrpc.test</methodName>
   <params>
     <param>
         <value><i4>42</i4></value>
