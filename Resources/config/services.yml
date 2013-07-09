@@ -1,8 +1,9 @@
 parameters:
-    bdxmlrpc.event_listener.request.class: BD\Bundle\XmlRpcBundle\EventListener\EventListener
-    bdxmlrpc.event_listener.view.class: BD\Bundle\XmlRpcBundle\EventListener\View
+    bdxmlrpc.event_listener.request.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
+    bdxmlrpc.event_listener.view.class: BD\Bundle\XmlRpcBundle\EventListener\ViewEventListener
     bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
     bdxmlrpc.request_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator
+    bdxmlrpc.response_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
 
 services:
     bdxmlrpc.event_listener.request:
@@ -12,7 +13,7 @@ services:
             - { name: kernel.event_subscriber }
 
     bdxmlrpc.event_listener.view:
-        class: %bdxmlrpc.event_listener.class%
+        class: %bdxmlrpc.event_listener.view.class%
         arguments: [ @bdxmlrpc.response_generator ]
         tags:
             - { name: kernel.event_subscriber }
@@ -28,5 +29,7 @@ services:
     bdxmlrpc.response_generator:
         class: %bdxmlrpc.response_generator.class%
 
-    bdxmlrpc.controller.test:
-        class: BD\Bundle\XmlRpcBundle\Controller\Test
+    bdxmlrpc.controller.hello:
+        class: BD\Bundle\XmlRpcBundle\Controller\Hello
+        calls:
+            - [ setContainer, [ @service_container ] ]

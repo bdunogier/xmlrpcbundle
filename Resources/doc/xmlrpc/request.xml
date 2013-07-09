@@ -1,9 +1,20 @@
 <?xml version="1.0"?>
 <methodCall>
-  <methodName>bdxmlrpc.test</methodName>
+  <methodName>bdxmlrpc.hello</methodName>
   <params>
     <param>
-        <value><i4>42</i4></value>
+        <value><string>world</string></value>
+    </param>
+    <param>
+        <value>
+            <array>
+                <data>
+                    <value><int>21</int></value>
+                    <value><int>42</int></value>
+                    <value><int>84</int></value>
+                </data>
+            </array>
+        </value>
     </param>
   </params>
 </methodCall>

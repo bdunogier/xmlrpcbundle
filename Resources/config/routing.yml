@@ -1,5 +1,5 @@
-bdxmlrpc.test1:
-    path: /xmlrpc/bdxmlrpc.test
+bdxmlrpc.hello:
+    path: /xmlrpc/bdxmlrpc.hello
     methods: [POST]
     defaults:
-        _controller: bdxmlrpc.controller.test:test
+        _controller: bdxmlrpc.controller.hello:hello
