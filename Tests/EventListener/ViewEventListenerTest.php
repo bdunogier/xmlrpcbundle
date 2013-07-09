@@ -59,7 +59,7 @@ class ViewEventListenerTest extends PHPUnit_Framework_TestCase
      */
     public function testOnControllerView()
     {
-        $xmlRpcResponse = new XmlRpcResponse();
+        $xmlRpcResponse = new XmlRpcResponse( 1 );
         $httpResponse = new Response();
 
         $event = new GetResponseForControllerResultEvent(
