@@ -76,6 +76,7 @@ XML;
             array( 'Forty-two', '<string>Forty-two</string>' ),
             array( new DateTime( '1948-04-28' ), '<dateTime.iso8601>1948-04-28T00:00:00</dateTime.iso8601>' ),
             array( array( 1, 'two' ), '<array><data><value><int>1</int></value><value><string>two</string></value></data></array>' ),
+            array( array(), '<array><data /></array>' ),
             array(
                 array( 'key1' => 1, 'key2' => 'two' ),
                 '<struct>

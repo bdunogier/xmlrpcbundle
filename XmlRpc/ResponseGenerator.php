@@ -85,7 +85,7 @@ class ResponseGenerator
 
             case 'array':
                 // array
-                if ( key( $value ) === 0 )
+                if ( empty( $value ) || key( $value ) === 0 )
                 {
                     $node = $domDocument->createElement( 'array' );
                     $dataNode = $domDocument->createElement( 'data' );
