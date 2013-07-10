@@ -5,6 +5,7 @@
 namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
 use BD\Bundle\XmlRpcBundle\XmlRpc\Response as XmlRpcResponse;
+use Exception;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use DomDocument;
 use DateTime;
@@ -20,12 +21,55 @@ class ResponseGenerator
      */
     public function fromXmlRpcResponse( XmlRpcResponse $xmlRpcResponse )
     {
-
-        $response = new HttpResponse( "@todo implement" );
+        $response = new HttpResponse();
         $response->setStatusCode( 200 );
         $response->headers->set( 'Content-Type', 'text/xml' );
-        $response->setContent( $this->generateXml( $xmlRpcResponse->return) );
+        $response->setContent( $this->generateXml( $xmlRpcResponse->return ) );
         return $response;
+    }
+
+    /**
+     * @param \Exception $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function fromException( Exception $exception )
+    {
+        $response = new HttpResponse();
+        $response->setStatusCode( 200 );
+        $response->headers->set( 'Content-Type', 'text/xml' );
+        $response->setContent( $this->generateXmlFromException( $exception ) );
+        return $response;
+    }
+
+    /**
+     * @param Exception $exception
+     * @return string
+     */
+    private function generateXmlFromException( Exception $exception )
+    {
+        $domDocument = new DomDocument( '1.0', 'UTF-8' );
+
+        // /methodFault
+        $rootNode = $domDocument->createElement( 'methodResponse' );
+        $domDocument->appendChild( $rootNode );
+
+        // /methodFault/fault
+        $faultNode = $domDocument->createElement( 'fault' );
+        $rootNode->appendChild( $faultNode );
+
+        // /methodFault/fault/value
+        $valueNode = $domDocument->createElement( 'value' );
+        $faultNode->appendChild( $valueNode );
+
+        $array = array(
+            'faultCode' => $exception->getCode(),
+            'faultString' => $exception->getMessage()
+        );
+        $valueNode->appendChild(
+            $this->handleValue( $array, $domDocument )
+        );
+
+        return $domDocument->saveXML();
     }
 
     /**

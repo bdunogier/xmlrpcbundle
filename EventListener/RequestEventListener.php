@@ -76,6 +76,8 @@ class RequestEventListener implements EventSubscriberInterface
             return;
         }
 
+        $request->attributes->set( 'IsXmlRpcRequest', true );
+
         $requestContext = new RequestContext();
         $requestContext->fromRequest( $request );
 

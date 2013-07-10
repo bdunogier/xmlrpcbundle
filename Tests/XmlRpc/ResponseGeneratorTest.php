@@ -55,6 +55,49 @@ XML;
         return $response;
     }
 
+    public function testFromException()
+    {
+        $response = $this->getResponseGenerator()->fromException(
+            new \Exception( "Forty-two.", 42 )
+        );
+
+        self::assertInstanceOf( '\\Symfony\\Component\\HttpFoundation\\Response', $response );
+        self::assertEquals( 200, $response->getStatusCode() );
+        self::assertEquals( 'text/xml', $response->headers->get( 'Content-Type' ) );
+
+        $expectedXml = <<< XML
+<?xml version="1.0"?>
+<methodResponse>
+    <fault>
+        <value>
+            <struct>
+                <member>
+                    <name>faultCode</name>
+                    <value><int>42</int></value>
+                </member>
+                <member>
+                    <name>faultString</name>
+                    <value><string>Forty-two.</string></value>
+                </member>
+            </struct>
+        </value>
+    </fault>
+</methodResponse>
+XML;
+        $expectedDom = new \DOMDocument;
+        $expectedDom->loadXML( $expectedXml );
+
+        $resultDom = new \DOMDocument();
+        $resultDom->loadXML( $response->getContent() );
+
+        self::assertEqualXMLStructure(
+            $expectedDom->firstChild,
+            $resultDom->firstChild
+        );
+
+        return $response;
+    }
+
     /**
      * @return \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
      */
