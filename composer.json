@@ -1,6 +1,6 @@
 {
     "name": "bdunogier/xmlrpcbundle",
-    "description": "Simple XML RPC Server for Symfony 2"
+    "description": "Simple XML RPC Server for Symfony 2",
     "license": "GPL-2.0",
     "authors": [
         {
