@@ -1,0 +1,16 @@
+{
+    "name": "bdunogier/xmlrpcbundle",
+    "description": "Simple XML RPC Server for Symfony 2"
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Bertrand Dunogier",
+            "homepage": "https://github.com/bdunogier/xmlrpcbundle"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {"BD\\Bundle\\XmlRpcBundle": ""}
+    },
+    "target-dir": "BD/Bundle/XmlRpcBundle"
+}
