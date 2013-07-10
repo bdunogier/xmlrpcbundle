@@ -62,7 +62,8 @@ class RequestEventListener implements EventSubscriberInterface
         if ( $event->getRequestType() != HttpKernelInterface::MASTER_REQUEST )
             return;
 
-        if ( strpos( $event->getRequest()->getPathInfo(), '/xmlrpc2' ) !== 0 || $event->getRequest()->getMethod() !== 'POST' )
+        // @todo make endpoint(s) customizable
+        if ( strpos( $event->getRequest()->getPathInfo(), '/xmlrpc.php' ) !== 0 || $event->getRequest()->getMethod() !== 'POST' )
             return;
 
         try
