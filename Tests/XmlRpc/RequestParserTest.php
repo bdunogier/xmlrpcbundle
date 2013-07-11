@@ -39,7 +39,7 @@ class RequestParserTest extends PHPUnit_Framework_TestCase
 
     <param><value><dateTime.iso8601>20081219T20:01:00</dateTime.iso8601></value></param>
 
-    <param><value><base64>PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxtZXRob2RDYWxsPgogIDxtZXRob2ROYW1lPmJkeG1scnBjLnRlc3Q8L21ldGhvZE5hbWU+CiAgPHBhcmFtcz4KICAgIDxwYXJhbT4KICAgICAgICA8dmFsdWU+PGk0PjQyPC9pND48L3ZhbHVlPgogICAgPC9wYXJhbT4KICA8L3BhcmFtcz4KPC9tZXRob2RDYWxsPgo=</base64></value></param>
+    <param><value><base64>PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxtZXRob2RDYWxsPgogIDxtZXRob2ROYW1lPmJkeG1scnBjLmhlbGxvPC9tZXRob2ROYW1lPgogIDxwYXJhbXM+CiAgICA8cGFyYW0+CiAgICAgICAgPHZhbHVlPjxzdHJpbmc+d29ybGQ8L3N0cmluZz48L3ZhbHVlPgogICAgPC9wYXJhbT4KICAgIDxwYXJhbT4KICAgICAgICA8dmFsdWU+CiAgICAgICAgICAgIDxhcnJheT4KICAgICAgICAgICAgICAgIDxkYXRhPgogICAgICAgICAgICAgICAgICAgIDx2YWx1ZT48aW50PjIxPC9pbnQ+PC92YWx1ZT4KICAgICAgICAgICAgICAgICAgICA8dmFsdWU+PGludD40MjwvaW50PjwvdmFsdWU+CiAgICAgICAgICAgICAgICAgICAgPHZhbHVlPjxpbnQ+ODQ8L2ludD48L3ZhbHVlPgogICAgICAgICAgICAgICAgPC9kYXRhPgogICAgICAgICAgICA8L2FycmF5PgogICAgICAgIDwvdmFsdWU+CiAgICA8L3BhcmFtPgogIDwvcGFyYW1zPgo8L21ldGhvZENhbGw+Cg==</base64></value></param>
 
     <param>
         <value>
@@ -67,7 +67,14 @@ class RequestParserTest extends PHPUnit_Framework_TestCase
             </array>
         </value>
     </param>
+
+    <param><value><boolean>1</boolean></value></param>
+
+    <param><value><nil/></value></param>
+
   </params>
+
+
 </methodCall>
 XML;
         }
@@ -275,6 +282,28 @@ XML;
             ),
             $parameters[8]
         );
+    }
+
+    /**
+     * Tests <string> parameters
+     * @depends testGetParameters
+     * @param array Result from RequestParser::getParameters()
+     * @covers \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser::getParameters
+     */
+    public function testGetBooleanParameter( $parameters )
+    {
+        self::assertEquals( true, $parameters[9] );
+    }
+
+    /**
+     * Tests <string> parameters
+     * @depends testGetParameters
+     * @param array Result from RequestParser::getParameters()
+     * @covers \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser::getParameters
+     */
+    public function testGetNilParameter( $parameters )
+    {
+        self::assertNull( $parameters[10] );
     }
 
     /**

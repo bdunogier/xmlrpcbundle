@@ -84,6 +84,14 @@ class RequestParser
                 $value = (float)$value;
                 break;
 
+            case 'boolean':
+                $value = (bool)$value;
+                break;
+
+            case 'nil':
+                $value = null;
+                break;
+
             case 'dateTime':
                 $value = $this->handleDateParameter( $value );
                 break;
@@ -184,10 +192,12 @@ class RequestParser
             'dateTime.iso8601' => 'dateTime',
             'base64' => 'base64',
             'struct' => 'struct',
-            'array' => 'array'
+            'array' => 'array',
+            'boolean' => 'boolean',
+            'nil' => 'nil'
         );
 
-        if ( !isset( $map ) )
+        if ( !isset( $map[$typeIdentifier] ) )
             throw new \UnexpectedValueException( "Unknown parameter type '$typeIdentifier'" );
 
         return $map[$typeIdentifier];

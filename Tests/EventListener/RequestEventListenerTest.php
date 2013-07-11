@@ -95,7 +95,7 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
      */
     public function testOnKernelRequest()
     {
-        $httpRequest = Request::create( '/xmlrpc2', 'POST' );
+        $httpRequest = Request::create( '/xmlrpc.php', 'POST' );
         $xmlRpcRequest = Request::create( '/xmlrpc/methodName', 'POST' );
 
         $event = new GetResponseEvent(
