@@ -119,6 +119,10 @@ class ResponseGenerator
                 $node = $domDocument->createElement( 'int', $value );
                 break;
 
+            case 'boolean':
+                $node = $domDocument->createElement( 'boolean', $value );
+                break;
+
             case 'string':
                 $node = $domDocument->createElement( 'string', $value );
                 break;
