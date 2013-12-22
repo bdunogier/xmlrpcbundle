@@ -39,11 +39,17 @@ class RequestEventListener implements EventSubscriberInterface
      */
     private $requestGenerator;
 
-    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGenerator $requestGenerator )
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGenerator $requestGenerator, $logger = null )
     {
         $this->httpKernel = $kernel;
         $this->router = $router;
         $this->requestGenerator = $requestGenerator;
+        $this->logger = $logger;
     }
 
     public static function getSubscribedEvents()
@@ -73,6 +79,7 @@ class RequestEventListener implements EventSubscriberInterface
         try
         {
             $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
+            $this->logger->debug( (string)$request );
         }
         catch ( UnexpectedValueException $e )
         {
