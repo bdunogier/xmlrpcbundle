@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Compiled the DI tag bd_xmlrpc.parameters_provider
+ * Compiled the DI tag bdxmlrpc.parameters_provider
  */
 class ParametersProviderCompilerPass implements CompilerPassInterface
 {
@@ -45,9 +45,7 @@ class ParametersProviderCompilerPass implements CompilerPassInterface
 
         if ( count( $providers ) > 0 )
         {
-            $resolverDefinition->setArguments(
-                array( $providers )
-            );
+            $resolverDefinition->addArgument( $providers );
         }
     }
 

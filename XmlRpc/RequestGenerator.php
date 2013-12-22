@@ -83,6 +83,10 @@ class RequestGenerator implements RequestGeneratorInterface
      */
     private function getParametersProcessor( $methodName )
     {
-        return isset( $this->parametersProcessors[$methodName] ) ? $this->parametersProcessors[$methodName] : null;
+        if ( !isset( $this->parametersProcessors[$methodName] ) )
+        {
+            return false;
+        }
+        return $this->parametersProcessors[$methodName];
     }
 }
