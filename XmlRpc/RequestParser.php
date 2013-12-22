@@ -10,6 +10,7 @@ namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
 use SimpleXmlElement;
 use DateTime;
+use UnexpectedValueException;
 
 /**
  * Parses an XML RPC request
@@ -29,13 +30,13 @@ class RequestParser implements RequestParserInterface
             $errors = array();
             foreach( libxml_get_errors() as $error )
                 $errors[] = $error->message;
-            throw new \UnexpectedValueException( "Invalid XML string:" . implode( "\n", $errors ) );
+            throw new UnexpectedValueException( "Invalid XML string:" . implode( "\n", $errors ) );
         }
 
         $this->simpleXml = $simpleXml;
 
         if ( !isset( $this->simpleXml->methodName ) )
-            throw new \UnexpectedValueException( "Invalid XML-RPC structure (/methodCall/methodName not found)" );
+            throw new UnexpectedValueException( "Invalid XML-RPC structure (/methodCall/methodName not found)" );
     }
 
     public function getParameters()
@@ -48,7 +49,7 @@ class RequestParser implements RequestParserInterface
         {
             if ( !isset( $param->value ) )
             {
-                throw new \UnexpectedValueException( "Invalid <param> tag (no value)" );
+                throw new UnexpectedValueException( "Invalid <param> tag (no value)" );
             }
             $parameters[] = $this->processParameter( (array)$param->value );
         }
@@ -123,9 +124,9 @@ class RequestParser implements RequestParserInterface
         $parts = explode( 'T', $value );
 
         if ( count( $parts ) != 2 )
-            throw new \UnexpectedValueException( "Invalid date $value" );
+            throw new UnexpectedValueException( "Invalid date $value" );
         if ( strlen( $parts[0] ) !== 8 || strlen( $parts[1] ) != 8)
-            throw new \UnexpectedValueException( "Invalid date $value" );
+            throw new UnexpectedValueException( "Invalid date $value" );
 
         $dateParts = array();
         sscanf( $parts[0], '%04d%02d%02d', $dateParts['year'], $dateParts['month'], $dateParts['day'] );
@@ -188,7 +189,7 @@ class RequestParser implements RequestParserInterface
         );
 
         if ( !isset( $map[$typeIdentifier] ) )
-            throw new \UnexpectedValueException( "Unknown parameter type '$typeIdentifier'" );
+            throw new UnexpectedValueException( "Unknown parameter type '$typeIdentifier'" );
 
         return $map[$typeIdentifier];
     }

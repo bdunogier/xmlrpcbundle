@@ -10,6 +10,7 @@
 namespace BD\Bundle\XmlRpcBundle\EventListener;
 
 use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGeneratorInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -25,7 +26,7 @@ use UnexpectedValueException;
 class RequestEventListener implements EventSubscriberInterface
 {
     /**
-     * @var \Symfony\Component\HttpKernel\HttpKernel
+     * @var HttpKernelInterface
      */
     private $httpKernel;
 
@@ -40,11 +41,11 @@ class RequestEventListener implements EventSubscriberInterface
     private $requestGenerator;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGeneratorInterface $requestGenerator, $logger = null )
+    public function __construct( HttpKernelInterface $kernel, RouterInterface $router, RequestGeneratorInterface $requestGenerator, LoggerInterface $logger = null )
     {
         $this->httpKernel = $kernel;
         $this->router = $router;
