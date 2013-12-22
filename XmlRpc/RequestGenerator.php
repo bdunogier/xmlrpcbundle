@@ -9,6 +9,7 @@
 
 namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
+use BD\Bundle\XmlRpcBundle\XmlRpc\ParametersProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestGenerator implements RequestGeneratorInterface
@@ -16,9 +17,16 @@ class RequestGenerator implements RequestGeneratorInterface
     /** @var RequestParserInterface */
     private $requestParser;
 
-    public function __construct( RequestParserInterface $requestParser )
+    /**
+     * Map of parameters processors, indexed by methodName
+     * @var ParametersProcessorInterface[]
+     */
+    protected $parametersProcessors;
+
+    public function __construct( RequestParserInterface $requestParser, array $parametersProcessors = array() )
     {
         $this->requestParser = $requestParser;
+        $this->parametersProcessors = $parametersProcessors;
     }
 
     public function generateFromRequest( Request $originalRequest )
@@ -26,13 +34,55 @@ class RequestGenerator implements RequestGeneratorInterface
         $this->requestParser->fromXmlString( $originalRequest->getContent() );
 
         return Request::create(
-            "/xmlrpc/" . $this->requestParser->getMethodName(),
+            $this->getRoutePath( $this->requestParser ),
             "POST",
-            $this->requestParser->getParameters(),
+            $this->getParameters( $this->requestParser ),
             $originalRequest->cookies->all(),
             array(),
             $originalRequest->server->all(),
             $originalRequest->getContent()
         );
+    }
+
+    protected function getRoutePath( RequestParserInterface $requestParser )
+    {
+        $methodName = $this->requestParser->getMethodName();
+        $routePath = "/xmlrpc/$methodName";
+
+        if ( !$parametersProcessor = $this->getParametersProcessor( $methodName ) )
+        {
+            return $routePath;
+        }
+
+        $arguments = $parametersProcessor->getRoutePathArguments( $requestParser->getParameters() );
+        if ( !$arguments )
+        {
+            return $routePath;
+        }
+
+        return $routePath . "/" . implode( '/', $arguments );
+    }
+
+    /**
+     * @param $requestParser RequestParserInterface
+     * @return array
+     */
+    protected function getParameters( RequestParserInterface $requestParser )
+    {
+        if ( !$parametersProcessor = $this->getParametersProcessor( $requestParser->getMethodName() ) )
+        {
+            return $requestParser->getParameters();
+        }
+
+        return $parametersProcessor->getParameters( $requestParser->getParameters() );
+    }
+
+    /**
+     * @param string
+     * @return ParametersProcessorInterface
+     */
+    private function getParametersProcessor( $methodName )
+    {
+        return isset( $this->parametersProcessors[$methodName] ) ? $this->parametersProcessors[$methodName] : null;
     }
 }
