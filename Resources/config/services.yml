@@ -1,7 +1,6 @@
 parameters:
     bdxmlrpc.event_listener.request.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
-    bdxmlrpc.event_listener.view.class: BD\Bundle\XmlRpcBundle\EventListener\ViewEventListener
-    bdxmlrpc.event_listener.exception.class: BD\Bundle\XmlRpcBundle\EventListener\ExceptionEventListener
+    bdxmlrpc.event_listener.response.class: BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener
     bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
     bdxmlrpc.request_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator
     bdxmlrpc.response_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
@@ -9,21 +8,21 @@ parameters:
 services:
     bdxmlrpc.event_listener.request:
         class: %bdxmlrpc.event_listener.request.class%
-        arguments: [ @http_kernel, @router, @bdxmlrpc.request_generator ]
+        arguments:
+            - @http_kernel
+            - @router
+            - @bdxmlrpc.request_generator
+            - @?logger
         tags:
             - { name: kernel.event_subscriber }
+            - { name: monolog.logger, channel: xmlrpc }
 
-    bdxmlrpc.event_listener.view:
-        class: %bdxmlrpc.event_listener.view.class%
-        arguments: [ @bdxmlrpc.response_generator ]
+    bdxmlrpc.event_listener.response:
+        class: %bdxmlrpc.event_listener.response.class%
+        arguments: [ @bdxmlrpc.response_generator, @?logger ]
         tags:
             - { name: kernel.event_subscriber }
-
-    bdxmlrpc.event_listener.exception:
-        class: %bdxmlrpc.event_listener.exception.class%
-        arguments: [ @bdxmlrpc.response_generator ]
-        tags:
-            - { name: kernel.event_subscriber }
+            - { name: monolog.logger, channel: xmlrpc }
 
     bdxmlrpc.request_parser:
         class: %bdxmlrpc.request_parser.class%

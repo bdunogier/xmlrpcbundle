@@ -5,7 +5,7 @@
 
 namespace BD\Bundle\XmlRpcBundle\Tests\EventListener;
 
-use BD\Bundle\XmlRpcBundle\EventListener\ViewEventListener;
+use BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener;
 use BD\Bundle\XmlRpcBundle\XmlRpc\Response as XmlRpcResponse;
 
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use PHPUnit_Framework_TestCase;
 
-class ViewEventListenerTest extends PHPUnit_Framework_TestCase
+class ResponseEventListenerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ViewEventListener::getSubscribedEvents()
@@ -29,7 +29,7 @@ class ViewEventListenerTest extends PHPUnit_Framework_TestCase
                     array( 'onControllerView', 16 ),
                 )
             ),
-            ViewEventListener::getSubscribedEvents()
+            ResponseEventListener::getSubscribedEvents()
         );
     }
 
@@ -86,11 +86,11 @@ class ViewEventListenerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \BD\Bundle\XmlRpcBundle\EventListener\ViewEventListener
+     * @return \BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener
      */
     private function getEventListener()
     {
-        return new ViewEventListener(
+        return new ResponseEventListener(
             $this->getResponseGeneratorMock()
         );
     }
