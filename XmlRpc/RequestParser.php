@@ -14,19 +14,13 @@ use DateTime;
 /**
  * Parses an XML RPC request
  */
-class RequestParser
+class RequestParser implements RequestParserInterface
 {
     const XML_RPC_ISO8601 = "Y#m#d\TH#i#s";
 
     /** @var \SimpleXMLElement */
     private $simpleXml;
 
-    /**
-     * Loads an XML string for parsing
-     * @param $xmlString
-     *
-     * @throws \UnexpectedValueException If the XML payload could not be parsed
-     */
     public function fromXmlString( $xmlString )
     {
         libxml_use_internal_errors( true );
@@ -44,10 +38,6 @@ class RequestParser
             throw new \UnexpectedValueException( "Invalid XML-RPC structure (/methodCall/methodName not found)" );
     }
 
-
-    /**
-     * @return array()
-     */
     public function getParameters()
     {
         if ( !isset( $this->simpleXml->params ) || $this->simpleXml->params->param->count() == 0 )

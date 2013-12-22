@@ -10,27 +10,17 @@
 namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
 use Symfony\Component\HttpFoundation\Request;
-use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser;
 
-class RequestGenerator
+class RequestGenerator implements RequestGeneratorInterface
 {
-    /**
-     * @var RequestParser
-     */
+    /** @var RequestParserInterface */
     private $requestParser;
 
-    public function __construct( RequestParser $requestParser )
+    public function __construct( RequestParserInterface $requestParser )
     {
         $this->requestParser = $requestParser;
     }
 
-    /**
-     * Generates an internal XML RPC request from an HTTP one
-     *
-     * @param Request $originalRequest
-     *
-     * @return Request
-     */
     public function generateFromRequest( Request $originalRequest )
     {
         $this->requestParser->fromXmlString( $originalRequest->getContent() );

@@ -4,22 +4,22 @@
  */
 namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
-use BD\Bundle\XmlRpcBundle\XmlRpc\Response as XmlRpcResponse;
-use Exception;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Exception;
 use DomDocument;
 use DateTime;
 
 /**
  * Generates an HttpFoundation response from an XmlRpc one
  */
-class ResponseGenerator
+class ResponseGenerator implements ResponseGeneratorInterface
 {
     /**
+     * Generates an XMLRPC HTTP response for $xmlRpcResponse
      * @param \BD\Bundle\XmlRpcBundle\XmlRpc\Response
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fromXmlRpcResponse( XmlRpcResponse $xmlRpcResponse )
+    public function fromXmlRpcResponse( Response $xmlRpcResponse )
     {
         $response = new HttpResponse();
         $response->setStatusCode( 200 );
@@ -29,6 +29,7 @@ class ResponseGenerator
     }
 
     /**
+     * Generates an XMLRPC HTTP response for the Exception $e
      * @param \Exception $e
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -171,14 +172,18 @@ class ResponseGenerator
                 break;
 
             case 'object':
-                // DateTime is okay
-                if ( !$value instanceof DateTime )
-                    continue;
-                $node = $domDocument->createElement( 'dateTime.iso8601', $value->format( DateTime::ISO8601 ) );
+                {
+                    // DateTime is okay
+                    if ( !$value instanceof DateTime )
+                        continue;
+                    $node = $domDocument->createElement( 'dateTime.iso8601', $value->format( DateTime::ISO8601 ) );
+                }
                 break;
 
             default:
+                {
                     throw new \UnexpectedValueException( "Unknown return value type" );
+                }
         }
 
         return $node;

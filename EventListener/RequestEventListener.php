@@ -9,7 +9,7 @@
 
 namespace BD\Bundle\XmlRpcBundle\EventListener;
 
-use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator;
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -35,7 +35,7 @@ class RequestEventListener implements EventSubscriberInterface
     private $router;
 
     /**
-     * @var RequestGenerator
+     * @var RequestGeneratorInterface
      */
     private $requestGenerator;
 
@@ -44,7 +44,7 @@ class RequestEventListener implements EventSubscriberInterface
      */
     private $logger;
 
-    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGenerator $requestGenerator, $logger = null )
+    public function __construct( HttpKernel $kernel, RouterInterface $router, RequestGeneratorInterface $requestGenerator, $logger = null )
     {
         $this->httpKernel = $kernel;
         $this->router = $router;

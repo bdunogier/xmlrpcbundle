@@ -14,16 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 use BD\Bundle\XmlRpcBundle\XmlRpc\Response as XmlRpcResponse;
-use BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator;
+use BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGeneratorInterface;
 
 class ResponseEventListener implements EventSubscriberInterface
 {
     /**
-     * @var ResponseGenerator
+     * @var ResponseGeneratorInterface
      */
     private $responseGenerator;
 
-    public function __construct( ResponseGenerator $responseGenerator )
+    public function __construct( ResponseGeneratorInterface $responseGenerator )
     {
         $this->responseGenerator = $responseGenerator;
     }
