@@ -87,6 +87,7 @@ class RequestEventListener implements EventSubscriberInterface
             return;
         }
 
+        // @todo refactor to dynamically set follow-up events instead of testing (cors bundle like)
         $request->attributes->set( 'IsXmlRpcRequest', true );
 
         $requestContext = new RequestContext();
