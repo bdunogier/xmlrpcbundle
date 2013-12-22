@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
+use UnexpectedValueException;
 
 class RequestEventListener implements EventSubscriberInterface
 {
@@ -63,14 +64,17 @@ class RequestEventListener implements EventSubscriberInterface
             return;
 
         // @todo make endpoint(s) customizable
-        if ( ( $event->getRequest()->getPathInfo() != '/xmlrpc' && $event->getRequest()->getPathInfo() != '/xmlrpc.php' ) || $event->getRequest()->getMethod() !== 'POST' )
+        if ( $event->getRequest()->getMethod() !== 'POST' )
+            return;
+
+        if ( $event->getRequest()->getPathInfo() != '/xmlrpc' && $event->getRequest()->getPathInfo() != '/xmlrpc.php' )
             return;
 
         try
         {
             $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
         }
-        catch ( \UnexpectedValueException $e )
+        catch ( UnexpectedValueException $e )
         {
             $event->setResponse( new Response( "Invalid request XML\n" . $e->getMessage(), 400 ) );
             return;
