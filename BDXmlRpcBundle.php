@@ -1,5 +1,4 @@
 <?php
-
 namespace BD\Bundle\XmlRpcBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

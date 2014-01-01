@@ -1,19 +1,11 @@
 <?php
-/**
- * File containing the RequestParserTest class.
- *
- * @copyright Copyright (C) 2013 eZ Systems AS. All rights reserved.
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version //autogentag//
- */
+namespace BD\Bundle\XmlRpcBundle\Tests\XmlRpc\Handler;
 
-namespace BD\Bundle\XmlRpcBundle\Tests\XmlRpc;
-
-use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser;
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParserInterface;
 use PHPUnit_Framework_TestCase;
 use DateTime;
 
-class RequestParserTest extends PHPUnit_Framework_TestCase
+abstract class BaseRequestParserTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers RequestParser::fromXmlString
@@ -86,7 +78,7 @@ XML;
     /**
      * @covers RequestParser::loadXmlString()
      * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage Invalid XML string:
+     * @expectedExceptionMessage Invalid XML-RPC
      */
     public function testFromXmlStringInvalidXml()
     {
@@ -96,7 +88,7 @@ XML;
     /**
      * @covers RequestParser::loadXmlString()
      * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage Invalid XML-RPC structure (/methodCall/methodName not found)
+     * @expectedExceptionMessage Invalid XML-RPC
      */
     public function testLoadXmlStringInvalidStructure()
     {
@@ -114,7 +106,7 @@ XML;
      * @depends testLoadXmlString
      * @param RequestParser $requestParser
      */
-    public function testGetMethodName( RequestParser $requestParser)
+    public function testGetMethodName( RequestParserInterface $requestParser)
     {
         self::assertEquals( 'bdxmlrpc.getStuff', $requestParser->getMethodName() );
     }
@@ -132,7 +124,7 @@ XML;
 XML;
         $parser = $this->testLoadXmLString( $xmlString );
         self::assertEquals(
-            array(),
+            null,
             $parser->getParameters()
         );
     }
@@ -163,7 +155,7 @@ XML;
      * @covers \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser::getParameters
      * @return array Parameters from $requestParser
      */
-    public function testGetParameters( RequestParser $requestParser )
+    public function testGetParameters( RequestParserInterface $requestParser )
     {
         self::assertInternalType( 'array', $requestParser->getParameters() );
         return $requestParser->getParameters();
@@ -233,7 +225,7 @@ XML;
     public function testGetDateTimeParameter( $parameters )
     {
         self::assertEquals(
-            new DateTime( '2008-12-19 20:01:00' ),
+            new DateTime( '2008-12-19 21:01:00' ),
             $parameters[5]
         );
     }
@@ -247,7 +239,7 @@ XML;
     public function testGetBase64Parameter( $parameters )
     {
         self::assertEquals(
-            file_get_contents( realpath( __DIR__ . '/../../Resources/doc/xmlrpc/request.xml' ) ),
+            file_get_contents( realpath( __DIR__ . '/../../../Resources/doc/xmlrpc/request.xml' ) ),
             $parameters[6]
         );
     }
@@ -278,7 +270,7 @@ XML;
             array(
                 42,
                 'Forty-two',
-                new DateTime( '2008-12-19 20:01:00' )
+                new DateTime( '2008-12-19 21:01:00' )
             ),
             $parameters[8]
         );
@@ -307,19 +299,7 @@ XML;
     }
 
     /**
-     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
+     * @return RequestParser
      */
-    private function getRequestParser()
-    {
-        if ( !isset( $this->requestParser ) )
-        {
-            $this->requestParser = new RequestParser;
-        }
-        return $this->requestParser;
-    }
-
-    /**
-     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
-     */
-    private $requestParser;
+    abstract protected function getRequestParser();
 }

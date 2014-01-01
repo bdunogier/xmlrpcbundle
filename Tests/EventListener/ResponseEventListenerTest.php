@@ -1,8 +1,4 @@
 <?php
-/**
- * File containing the ViewEventListener class.
- */
-
 namespace BD\Bundle\XmlRpcBundle\Tests\EventListener;
 
 use BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener;
@@ -14,25 +10,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use PHPUnit_Framework_TestCase;
-
-class ResponseEventListenerTest extends PHPUnit_Framework_TestCase
+class ResponseEventListenerTest extends BaseEventListenerTest
 {
-    /**
-     * @covers ViewEventListener::getSubscribedEvents()
-     */
-    public function testGetSubscribedEvents()
-    {
-        self::assertEquals(
-            array(
-                KernelEvents::VIEW => array(
-                    array( 'onControllerView', 16 ),
-                )
-            ),
-            ResponseEventListener::getSubscribedEvents()
-        );
-    }
-
     /**
      * @covers ViewEventListener::onControllerView()
      */
@@ -88,7 +67,7 @@ class ResponseEventListenerTest extends PHPUnit_Framework_TestCase
     /**
      * @return \BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener
      */
-    private function getEventListener()
+    protected function getEventListener()
     {
         return new ResponseEventListener(
             $this->getResponseGeneratorMock()
@@ -96,30 +75,14 @@ class ResponseEventListenerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Symfony\Component\HttpKernel\HttpKernel|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getHttpKernelMock()
-    {
-        if ( !isset( $this->httpKernelMock ) )
-        {
-            $this->httpKernelMock = $this
-                ->getMockBuilder( 'Symfony\\Component\\HttpKernel\\HttpKernel' )
-                ->disableOriginalConstructor()
-                ->getMock();
-        }
-
-        return $this->httpKernelMock;
-    }
-
-    /**
-     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator|\PHPUnit_Framework_MockObject_MockObject
+     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getResponseGeneratorMock()
     {
         if ( !isset( $this->responseGeneratorMock ) )
         {
             $this->responseGeneratorMock = $this
-                ->getMockBuilder( 'BD\\Bundle\\XmlRpcBundle\\XmlRpc\\ResponseGenerator' )
+                ->getMockBuilder( 'BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGeneratorInterface' )
                 ->disableOriginalConstructor()
                 ->getMock();
         }
@@ -127,12 +90,7 @@ class ResponseEventListenerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @var \Symfony\Component\HttpKernel\HttpKernel|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $httpKernelMock;
-
-    /**
-     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator|\PHPUnit_Framework_MockObject_MockObject
+     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $responseGeneratorMock;
 }

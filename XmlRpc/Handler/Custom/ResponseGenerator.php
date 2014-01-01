@@ -2,8 +2,10 @@
 /**
  * File containing the Response class.
  */
-namespace BD\Bundle\XmlRpcBundle\XmlRpc;
+namespace BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Custom;
 
+use BD\Bundle\XmlRpcBundle\XmlRpc\Response;
+use BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGeneratorInterface;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Exception;
 use DomDocument;
@@ -15,7 +17,7 @@ use DateTime;
 class ResponseGenerator implements ResponseGeneratorInterface
 {
     /**
-     * Generates an XMLRPC HTTP response for $xmlRpcResponse
+     * Generates an XML-RPC HTTP response for $xmlRpcResponse
      * @param \BD\Bundle\XmlRpcBundle\XmlRpc\Response
      * @return \Symfony\Component\HttpFoundation\Response
      */

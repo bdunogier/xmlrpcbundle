@@ -1,9 +1,11 @@
 parameters:
     bdxmlrpc.event_listener.request.class: BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
     bdxmlrpc.event_listener.response.class: BD\Bundle\XmlRpcBundle\EventListener\ResponseEventListener
-    bdxmlrpc.request_parser.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser
     bdxmlrpc.request_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator
-    bdxmlrpc.response_generator.class: BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
+    bdxmlrpc.request_parser.custom.class: BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Custom\RequestParser
+    bdxmlrpc.response_generator.custom.class: BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Custom\ResponseGenerator
+    bdxmlrpc.request_parser.ext.class: BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Ext\RequestParser
+    bdxmlrpc.response_generator.ext.class: BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Ext\ResponseGenerator
 
 services:
     bdxmlrpc.event_listener.request:
@@ -24,18 +26,24 @@ services:
             - { name: kernel.event_subscriber }
             - { name: monolog.logger, channel: xmlrpc }
 
-    bdxmlrpc.request_parser:
-        class: %bdxmlrpc.request_parser.class%
+    bdxmlrpc.controller.hello:
+        class: BD\Bundle\XmlRpcBundle\Controller\Hello
+        calls:
+            - [ setContainer, [ @service_container ] ]
 
     bdxmlrpc.request_generator:
         class: %bdxmlrpc.request_generator.class%
         arguments:
             - @bdxmlrpc.request_parser
 
-    bdxmlrpc.response_generator:
-        class: %bdxmlrpc.response_generator.class%
+    bdxmlrpc.response_generator.custom:
+        class: %bdxmlrpc.response_generator.custom.class%
 
-    bdxmlrpc.controller.hello:
-        class: BD\Bundle\XmlRpcBundle\Controller\Hello
-        calls:
-            - [ setContainer, [ @service_container ] ]
+    bdxmlrpc.request_parser.custom:
+        class: %bdxmlrpc.request_parser.custom.class%
+
+    bdxmlrpc.request_parser.ext:
+        class: %bdxmlrpc.request_parser.ext.class%
+
+    bdxmlrpc.response_generator.ext:
+        class: %bdxmlrpc.response_generator.ext.class%

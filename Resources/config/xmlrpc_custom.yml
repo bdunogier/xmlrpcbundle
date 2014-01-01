@@ -1,0 +1,7 @@
+# Sets XML-RPC services to use the XmlRpc/Handler/Custom versions (custom PHP implementation)
+services:
+    bdxmlrpc.request_parser:
+        alias: bdxmlrpc.request_parser.custom
+
+    bdxmlrpc.response_generator:
+        alias: bdxmlrpc.response_generator.custom

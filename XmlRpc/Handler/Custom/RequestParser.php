@@ -6,8 +6,10 @@
  * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
  * @version //autogentag//
  */ 
-namespace BD\Bundle\XmlRpcBundle\XmlRpc;
+namespace BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Custom;
 
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParserInterface;
+use DateTimeZone;
 use SimpleXmlElement;
 use DateTime;
 use UnexpectedValueException;
@@ -17,7 +19,7 @@ use UnexpectedValueException;
  */
 class RequestParser implements RequestParserInterface
 {
-    const XML_RPC_ISO8601 = "Y#m#d\TH#i#s";
+    const XML_RPC_ISO8601 = "Ymd\TH#i#s";
 
     /** @var \SimpleXMLElement */
     private $simpleXml;
@@ -30,7 +32,7 @@ class RequestParser implements RequestParserInterface
             $errors = array();
             foreach( libxml_get_errors() as $error )
                 $errors[] = $error->message;
-            throw new UnexpectedValueException( "Invalid XML string:" . implode( "\n", $errors ) );
+            throw new UnexpectedValueException( "Invalid XML-RPC message:" . implode( "\n", $errors ) );
         }
 
         $this->simpleXml = $simpleXml;
@@ -41,8 +43,8 @@ class RequestParser implements RequestParserInterface
 
     public function getParameters()
     {
-        if ( !isset( $this->simpleXml->params ) || $this->simpleXml->params->param->count() == 0 )
-            return array();
+        if ( !isset( $this->simpleXml->params ) )
+            return null;
 
         $parameters = array();
         foreach ( $this->simpleXml->params->children() as $param )
@@ -114,12 +116,15 @@ class RequestParser implements RequestParserInterface
     protected function handleDateParameter( $value )
     {
         $date = DateTime::createFromFormat(
-            self::XML_RPC_ISO8601, (string)$value
+            self::XML_RPC_ISO8601, (string)$value, new \DateTimeZone( 'UTC' )
         );
 
-        //no separators, maybe, try again
+        // no separators, maybe, try again
         if ( $date instanceof DateTime )
+        {
+            $date->setTimezone( new DateTimeZone( date_default_timezone_get() ) );
             return $date;
+        }
 
         $parts = explode( 'T', $value );
 
@@ -137,7 +142,13 @@ class RequestParser implements RequestParserInterface
             $dateParts['hours'], $dateParts['minutes'], $dateParts['seconds']
         );
 
-        return DateTime::createFromFormat( self::XML_RPC_ISO8601, $iso8601date );
+        $date = DateTime::createFromFormat( self::XML_RPC_ISO8601, $iso8601date, new DateTimeZone( 'UTC' ) );
+        if ( $date instanceof DateTime )
+        {
+            $date->setTimezone( new DateTimeZone( date_default_timezone_get() ) );
+            return $date;
+        }
+        return $date;
     }
 
     /**
@@ -164,9 +175,17 @@ class RequestParser implements RequestParserInterface
     protected function handleArrayParameter( $value )
     {
         $values = array();
-        foreach ( $value->data->value as $value )
+        foreach ( $value->data->value as $subValue )
         {
-            $values[] = $this->processParameter( (array)$value );
+            if ( $subValue->count() > 0 )
+            {
+                $subValue = (array)$subValue;
+            }
+            else
+            {
+                $subValue = array( (string)$subValue );
+            }
+            $values[] = $this->processParameter( $subValue );
         }
 
         return $values;
