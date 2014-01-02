@@ -1,4 +1,9 @@
 language: php
+
+env:
+  global:
+    - TIMEZONE="Europe/Paris"
+
 php:
   - 5.3
   - 5.4
@@ -6,3 +11,5 @@ php:
 before_script:
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
+
+script: "phpunit -d date.timezone=$TIMEZONE"
