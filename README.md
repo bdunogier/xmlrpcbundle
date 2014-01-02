@@ -37,4 +37,4 @@ myroute.getLatestContent:
 And that's it. In your controller, you will receive a standard HttpFoundation Request, where each parameter is part
 of the POST data.
 
-An hello world example can be found in the bundle itself.
+An hello world example can be found inside the bundle itself.
