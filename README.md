@@ -1,5 +1,7 @@
 # XML RPC Bundle
 
+[![Build Status](https://travis-ci.org/bdunogier/xmlrpcbundle.png)](https://travis-ci.org/bdunogier/xmlrpcbundle)
+
 ## Principle
 
 This Symfony 2 bundle will let you implement an XML-RPC server without leaving the comfort of your gold old Symfony 2.
