@@ -12,5 +12,15 @@
     "autoload": {
         "psr-0": {"BD\\Bundle\\XmlRpcBundle": ""}
     },
-    "target-dir": "BD/Bundle/XmlRpcBundle"
+    "target-dir": "BD/Bundle/XmlRpcBundle",
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/http-kernel": "@dev",
+        "symfony/routing": "@dev",
+        "symfony/config": "@dev",
+        "symfony/event-dispatcher": "@dev",
+        "symfony/http-foundation": "@dev",
+        "symfony/dependency-injection": "@dev"
+
+    }
 }
