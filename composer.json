@@ -21,6 +21,8 @@
         "symfony/event-dispatcher": "@dev",
         "symfony/http-foundation": "@dev",
         "symfony/dependency-injection": "@dev"
-
+    },
+    "suggest": {
+        "ext-xmlrpc": "*"
     }
 }

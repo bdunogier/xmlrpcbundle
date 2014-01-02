@@ -9,7 +9,9 @@
 
 namespace BD\Bundle\XmlRpcBundle\XmlRpc;
 
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestParserInterface;
 use BD\Bundle\XmlRpcBundle\XmlRpc\ParametersProcessorInterface;
+use BD\Bundle\XmlRpcBundle\XmlRpc\RequestGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class RequestGenerator implements RequestGeneratorInterface

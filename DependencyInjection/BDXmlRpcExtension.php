@@ -20,9 +20,18 @@ class BDXmlRpcExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration( $configuration, $configs );
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new Loader\YamlFileLoader( $container, new FileLocator( __DIR__ . '/../Resources/config' ) );
+        $loader->load( 'services.yml' );
+
+        if ( extension_loaded( 'xmlrpc' ) )
+        {
+            $loader->load( 'xmlrpc_ext.yml' );
+        }
+        else
+        {
+            $loader->load( 'xmlrpc_custom.yml' );
+        }
     }
 }

@@ -80,7 +80,10 @@ class RequestEventListener implements EventSubscriberInterface
         try
         {
             $request = $this->requestGenerator->generateFromRequest( $event->getRequest() );
-            $this->logger->debug( (string)$request );
+            if ( isset( $this->logger ) )
+            {
+                $this->logger->debug( (string)$request );
+            }
         }
         catch ( UnexpectedValueException $e )
         {

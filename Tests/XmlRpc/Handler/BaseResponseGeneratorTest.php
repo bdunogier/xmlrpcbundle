@@ -1,18 +1,19 @@
 <?php
-/**
- * File containing the ResponseGeneratorTest class.
- */
-
-namespace BD\Bundle\XmlRpcBundle\Tests\XmlRpc;
+namespace BD\Bundle\XmlRpcBundle\Tests\XmlRpc\Handler;
 
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
-use BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator;
+use BD\Bundle\XmlRpcBundle\XmlRpc\Handler\Custom\ResponseGenerator;
 use BD\Bundle\XmlRpcBundle\XmlRpc\Response as XmlRpcResponse;
 use DateTime;
 
-class ResponseGeneratorTest extends PHPUnit_Framework_TestCase
+abstract class BaseResponseGeneratorTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @return ResponseGenerator
+     */
+    abstract protected function getResponseGenerator();
+
     /**
      * @dataProvider responseProvider
      * @param mixed $responseValue
@@ -98,19 +99,6 @@ XML;
         return $response;
     }
 
-    /**
-     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
-     */
-    public function getResponseGenerator()
-    {
-        if ( !isset( $this->responseGenerator ) )
-        {
-            $this->responseGenerator = new ResponseGenerator();
-        }
-
-        return $this->responseGenerator;
-    }
-
     public function responseProvider()
     {
         return array(
@@ -129,9 +117,4 @@ XML;
             )
         );
     }
-
-    /**
-     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\ResponseGenerator
-     */
-    private $responseGenerator;
 }

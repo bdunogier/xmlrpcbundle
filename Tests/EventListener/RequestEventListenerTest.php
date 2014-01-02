@@ -1,12 +1,4 @@
 <?php
-/**
- * File containing the RequestEventListener class.
- *
- * @copyright Copyright (C) 2013 eZ Systems AS. All rights reserved.
- * @license http://www.gnu.org/licenses/gpl-2.0.txt GNU General Public License v2
- * @version //autogentag//
- */
-
 namespace BD\Bundle\XmlRpcBundle\Tests\EventListener;
 
 use BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener;
@@ -20,23 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use PHPUnit_Framework_TestCase;
 use Symfony\Component\Routing\RequestContext;
 
-class RequestEventListenerTest extends PHPUnit_Framework_TestCase
+class RequestEventListenerTest extends BaseEventListenerTest
 {
-    /**
-     * @covers RequestEventListener::getSubscribedEvents()
-     */
-    public function testGetSubscribedEvents()
-    {
-        self::assertEquals(
-            array(
-                KernelEvents::REQUEST => array(
-                    array( 'onKernelRequest', 16 ),
-                )
-            ),
-            RequestEventListener::getSubscribedEvents()
-        );
-    }
-
     /**
      * @covers RequestEventListener::onKernelRequest()
      */
@@ -53,7 +30,7 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->method( 'generateFromRequest' );
 
         self::assertNull(
-            $this->getRequestEventListener()->onKernelRequest( $event )
+            $this->getEventListener()->onKernelRequest( $event )
         );
     }
 
@@ -75,7 +52,7 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->method( 'generateFromRequest' );
 
         self::assertNull(
-            $this->getRequestEventListener()->onKernelRequest( $event )
+            $this->getEventListener()->onKernelRequest( $event )
         );
     }
 
@@ -121,7 +98,7 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->will( $this->returnValue( new Response() ) );
 
         self::assertNull(
-            $this->getRequestEventListener()->onKernelRequest( $event )
+            $this->getEventListener()->onKernelRequest( $event )
         );
     }
 
@@ -142,14 +119,14 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
             ->method( 'generateFromRequest' );
 
         self::assertNull(
-            $this->getRequestEventListener()->onKernelRequest( $event )
+            $this->getEventListener()->onKernelRequest( $event )
         );
     }
 
     /**
      * @return \BD\Bundle\XmlRpcBundle\EventListener\RequestEventListener
      */
-    private function getRequestEventListener()
+    protected function getEventListener()
     {
         return new RequestEventListener(
             $this->getHttpKernelMock(),
@@ -159,32 +136,13 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \Symfony\Component\HttpKernel\HttpKernel|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getHttpKernelMock()
-    {
-        if ( !isset( $this->httpKernelMock ) )
-        {
-            $this->httpKernelMock = $this
-                ->getMockBuilder( 'Symfony\\Component\\HttpKernel\\HttpKernel' )
-                ->disableOriginalConstructor()
-                ->getMock();
-        }
-
-        return $this->httpKernelMock;
-    }
-
-    /**
-     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParser|\PHPUnit_Framework_MockObject_MockObject
+     * @return \BD\Bundle\XmlRpcBundle\XmlRpc\RequestParserInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getRequestGeneratorMock()
     {
         if ( !isset( $this->requestGeneratorMock ) )
         {
-            $this->requestGeneratorMock = $this
-                ->getMockBuilder( 'BD\\Bundle\\XmlRpcBundle\\XmlRpc\\RequestGenerator' )
-                ->disableOriginalConstructor()
-                ->getMock();
+            $this->requestGeneratorMock = $this->getMock( 'BD\Bundle\XmlRpcBundle\XmlRpc\RequestGeneratorInterface' );
         }
         return $this->requestGeneratorMock;
     }
@@ -196,18 +154,13 @@ class RequestEventListenerTest extends PHPUnit_Framework_TestCase
     {
         if ( !isset( $this->routerMock ) )
         {
-            $this->routerMock = $this->getMock( 'Symfony\\Component\\Routing\\RouterInterface' );
+            $this->routerMock = $this->getMock( 'Symfony\Component\Routing\RouterInterface' );
         }
         return $this->routerMock;
     }
 
     /**
-     * @var \Symfony\Component\HttpKernel\HttpKernel|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $httpKernelMock;
-
-    /**
-     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\RequestGenerator|\PHPUnit_Framework_MockObject_MockObject
+     * @var \BD\Bundle\XmlRpcBundle\XmlRpc\RequestGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $requestGeneratorMock;
 
