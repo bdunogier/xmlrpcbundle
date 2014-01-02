@@ -38,7 +38,7 @@ class RequestGenerator implements RequestGeneratorInterface
         return Request::create(
             $this->getRoutePath( $this->requestParser ),
             "POST",
-            $this->getParameters( $this->requestParser ),
+            (array)$this->getParameters( $this->requestParser ),
             $originalRequest->cookies->all(),
             array(),
             $originalRequest->server->all(),
