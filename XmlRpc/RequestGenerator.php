@@ -35,7 +35,7 @@ class RequestGenerator implements RequestGeneratorInterface
     {
         $this->requestParser->fromXmlString( $originalRequest->getContent() );
 
-        return Request::create(
+        $request = Request::create(
             $this->getRoutePath( $this->requestParser ),
             "POST",
             (array)$this->getParameters( $this->requestParser ),
@@ -44,6 +44,8 @@ class RequestGenerator implements RequestGeneratorInterface
             $originalRequest->server->all(),
             $originalRequest->getContent()
         );
+        $request->attributes->set( 'xmlrpc_methodName', $this->requestParser->getMethodName() );
+        return $request;
     }
 
     protected function getRoutePath( RequestParserInterface $requestParser )
