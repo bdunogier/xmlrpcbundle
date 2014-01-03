@@ -44,6 +44,11 @@ class RequestGeneratorTest extends PHPUnit_Framework_TestCase
             $parameters,
             $xmlRpcRequest->request->all()
         );
+
+        self::assertEquals(
+            'methodName',
+            $xmlRpcRequest->attributes->get( 'xmlrpc_methodName' )
+        );
     }
 
     /**
