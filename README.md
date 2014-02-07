@@ -64,3 +64,6 @@ by slashes.
 ### `ParametersProcessorInterface::getParameters()`
 
 This method must return an array, associative or not, of POST parameters that will be added to the request.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/bdunogier/xmlrpcbundle/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
