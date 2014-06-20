@@ -1,6 +1,7 @@
 # XML RPC Bundle
 
 [![Build Status](https://travis-ci.org/bdunogier/xmlrpcbundle.png)](https://travis-ci.org/bdunogier/xmlrpcbundle)
+[![Analytics](https://ga-beacon.appspot.com/UA-52121860-1/xmlrpcbundle/readme)](https://github.com/igrigorik/ga-beacon)
 
 ## Principle
 
